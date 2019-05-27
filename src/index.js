@@ -3,6 +3,8 @@ import { WebView as RNWebView, StyleSheet, Platform } from "react-native";
 
 const changeData = data => `chart.changeData(${JSON.stringify(data)});`;
 
+const clearData = data => `chart.clear(${JSON.stringify(data)});`;
+
 const source = Platform.select({
   ios: require("./f2chart.html"),
   android: { uri: "file:///android_asset/f2chart.html" }
@@ -39,10 +41,11 @@ export default class Chart extends PureComponent<Props> {
 
   update = data => {
     const { isPie, scriptFun } = this.props;
-    this.chart.current.injectJavaScript(changeData(data));
     if (isPie && scriptFun) {
+      this.chart.current.injectJavaScript(clearData(data));
       this.chart.current.injectJavaScript(scriptFun(data));
     }
+    this.chart.current.injectJavaScript(changeData(data));
   };
 
   repaint = script => this.chart.current.injectJavaScript(script);
