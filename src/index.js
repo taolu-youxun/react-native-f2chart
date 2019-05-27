@@ -11,7 +11,9 @@ const source = Platform.select({
 type Props = {
   initScript: string,
   data?: Array<Object>,
+  isPie?: Boolean,
   onChange?: Function,
+  scriptFun?: Function,
   webView?: any
 };
 
@@ -36,7 +38,11 @@ export default class Chart extends PureComponent<Props> {
   }
 
   update = data => {
+    const { isPie, scriptFun } = this.props;
     this.chart.current.injectJavaScript(changeData(data));
+    if (isPie && scriptFun) {
+      this.chart.current.injectJavaScript(scriptFun(data));
+    }
   };
 
   repaint = script => this.chart.current.injectJavaScript(script);

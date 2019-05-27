@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aloneszjl/react-native-f2chart.git"
+    "url": "git+https://github.com/taolu-youxun/react-native-f2chart.git"
   },
   "keywords": [
     "react-native",
@@ -20,7 +20,7 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/aloneszjl/react-native-f2chart/issues"
+    "url": "https://github.com/taolu-youxun/react-native-f2chart/issues"
   },
-  "homepage": "https://github.com/aloneszjl/react-native-f2chart#readme"
+  "homepage": "https://github.com/taolu-youxun/react-native-f2chart#readme"
 }
