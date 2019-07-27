@@ -21,10 +21,10 @@ type Props = {
 
 export default class Chart extends PureComponent<Props> {
   static defaultProps = {
-    onChange: () => {},
+    onChange: () => { },
     initScript: "",
     data: [],
-    webView: RNWebView
+    webView: RNWebView,
   };
 
   constructor(props) {
@@ -48,6 +48,14 @@ export default class Chart extends PureComponent<Props> {
     this.chart.current.injectJavaScript(changeData(data));
   };
 
+  componentWillUnmount = () => {
+    const { data } = this.props;
+    if (data) {
+      this.chart.current.injectJavaScript(clearData(data));
+
+    }
+  }
+
   repaint = script => this.chart.current.injectJavaScript(script);
 
   onMessage = event => {
@@ -62,9 +70,10 @@ export default class Chart extends PureComponent<Props> {
   render() {
     const {
       webView: WebView,
-      data,
+      data = [],
       onChange,
       initScript,
+      height,
       ...props
     } = this.props;
     return (
@@ -72,7 +81,7 @@ export default class Chart extends PureComponent<Props> {
         javaScriptEnabled
         ref={this.chart}
         scrollEnabled={false}
-        style={styles.webView}
+        style={[styles.webView, { height: height || 250 }]}
         injectedJavaScript={initScript}
         source={source}
         originWhitelist={["*"]}
