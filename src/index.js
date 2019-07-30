@@ -1,9 +1,12 @@
 import React, { PureComponent, createRef } from "react";
 import { WebView as RNWebView, StyleSheet, Platform } from "react-native";
 
-const changeData = data => `chart.changeData(${JSON.stringify(data)});`;
+const changeData = data => `chart.changeData(${JSON.stringify(data)});
+`;
 
-const clearData = data => `chart.clear(${JSON.stringify(data)});`;
+const clearData = () => `chart.clear();`;
+
+const destoryData = () => `chart.destory();`;
 
 const source = Platform.select({
   ios: require("./f2chart.html"),
@@ -49,11 +52,7 @@ export default class Chart extends PureComponent<Props> {
   };
 
   componentWillUnmount = () => {
-    const { data } = this.props;
-    if (data) {
-      this.chart.current.injectJavaScript(clearData(data));
-
-    }
+    this.chart.current.injectJavaScript(destoryData());
   }
 
   repaint = script => this.chart.current.injectJavaScript(script);
@@ -73,15 +72,18 @@ export default class Chart extends PureComponent<Props> {
       data = [],
       onChange,
       initScript,
-      height,
       ...props
     } = this.props;
     return (
       <WebView
-        javaScriptEnabled
+        automaticallyAdjustContentInsets={true}
+        // startInLoadingState={true}
+        javaScriptEnabled={true}
+        // domStorageEnabled={true}
+        scalesPageToFit={true}
         ref={this.chart}
-        scrollEnabled={false}
-        style={[styles.webView, { height: height || 250 }]}
+        scrollEnabled={true}
+        style={styles.webView}
         injectedJavaScript={initScript}
         source={source}
         originWhitelist={["*"]}
