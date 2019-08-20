@@ -1,5 +1,5 @@
-import React, { PureComponent, createRef } from "react";
-import { WebView as RNWebView, StyleSheet, Platform } from "react-native";
+import React, { PureComponent, createRef } from 'react';
+import { WebView as RNWebView, StyleSheet, Platform } from 'react-native';
 
 const changeData = data => `chart.changeData(${JSON.stringify(data)});
 `;
@@ -9,12 +9,13 @@ const clearData = () => `chart.clear();`;
 const destoryData = () => `chart.destory();`;
 
 const source = Platform.select({
-  ios: require("./f2chart.html"),
-  android: { uri: "file:///android_asset/f2chart.html" }
+  ios: require('./f2chart.html'),
+  android: { uri: 'file:///android_asset/f2chart.html' }
 });
 
 type Props = {
   initScript: string,
+  refreshProps: String,
   data?: Array<Object>,
   isPie?: Boolean,
   onChange?: Function,
@@ -24,10 +25,10 @@ type Props = {
 
 export default class Chart extends PureComponent<Props> {
   static defaultProps = {
-    onChange: () => { },
-    initScript: "",
+    onChange: () => {},
+    initScript: '',
     data: [],
-    webView: RNWebView,
+    webView: RNWebView
   };
 
   constructor(props) {
@@ -38,22 +39,22 @@ export default class Chart extends PureComponent<Props> {
   componentWillReceiveProps(nextProps) {
     const { data } = this.props;
     if (data !== nextProps.data) {
-      this.update(nextProps.data);
+      this.update(nextProps);
     }
   }
 
-  update = data => {
-    const { isPie, scriptFun } = this.props;
+  update = props => {
+    const { isPie, scriptFun, refreshProps, data } = props;
     if (isPie && scriptFun) {
       this.chart.current.injectJavaScript(clearData(data));
-      this.chart.current.injectJavaScript(scriptFun(data));
+      this.chart.current.injectJavaScript(scriptFun(data, props[refreshProps]));
     }
     this.chart.current.injectJavaScript(changeData(data));
   };
 
   componentWillUnmount = () => {
     this.chart.current.injectJavaScript(destoryData());
-  }
+  };
 
   repaint = script => this.chart.current.injectJavaScript(script);
 
@@ -86,7 +87,7 @@ export default class Chart extends PureComponent<Props> {
         style={styles.webView}
         injectedJavaScript={initScript}
         source={source}
-        originWhitelist={["*"]}
+        originWhitelist={['*']}
         onMessage={this.onMessage}
         {...props}
       />
@@ -97,6 +98,6 @@ export default class Chart extends PureComponent<Props> {
 const styles = StyleSheet.create({
   webView: {
     flex: 1,
-    backgroundColor: "transparent"
+    backgroundColor: 'transparent'
   }
 });
